@@ -46,7 +46,14 @@ def change_model():
     models = []
     # get available models
     if config["provider"] == "ollama":
-        pass
+        trying = True
+        while trying:
+            req = requests.get(config["endpoint"]+"/api/tags")
+            if req.status_code == 200:
+                json = req.json()
+                for m in json["models"]:
+                    models.append(m["name"])
+
     elif config["provider"] == "jan":
         trying = True
         while trying:
@@ -106,7 +113,8 @@ def main():
             else:
                 break
         
-    print("servus")
+    # start model
+
     save_config()
 
 if __name__ == "__main__":
